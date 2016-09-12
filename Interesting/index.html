@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <title>Test Suite</title>
+    <script>
+      function log(desc) {
+        console.log(desc);
+        var li = document.createElement("li");
+        if(desc != ''){
+        	li.className = 'pass';
+        	li.appendChild(document.createTextNode(desc));
+        }
+        else{
+        	li.className = 'fail';
+        	li.appendChild(document.createTextNode('Null'));
+        }
+        document.getElementById("results").appendChild(li);
+      }
+    </script>
+
+    <style>
+      #results li.pass { color: black; }
+      #results li.fail { color: red;text-decoration: line-through;}
+      ul{padding:0;margin: 10px;}
+      #results li{list-style: none;border:1px solid black;margin:3px;padding: 3px;}
+    </style>
+  </head>
+
+  <body>
+    <ul id="results"></ul>
+	<script type="text/javascript" src="script.js"></script>
+  </body>
+</html>
+
