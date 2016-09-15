@@ -920,9 +920,137 @@ assert(user.name == "Ichigo Kurosaki",             //#4
      "User name correctly assigned");
 */
 //6.18
+/*
 function Test() {
 return this instanceof arguments.callee;
 }
 
 assert(!Test(), "We didn't instantiate, so it returns false.");
 assert(new Test(), "We did instantiate, returning true.");
+*/
+//6.19
+/*
+  function User(first, last) {
+    if (!(this instanceof arguments.callee)) {             //#1
+      return new User(first,last);                         //#1
+    }                                                      //#1
+    this.name = first + " " + last;
+  }
+
+  var name = "Rukia";
+
+  var user = User("Ichigo", "Kurosaki");                    //#2
+
+  assert(name == "Rukia","Name was set to Rukia.");         //#3
+  assert(user instanceof User, "User instantiated");        //#3
+  assert(user.name == "Ichigo Kurosaki",                    //#3
+         "User name correctly assigned");                   //#3
+*/
+//6.20
+/*
+var Person = Object.subClass({                           //#1
+    init: function(isDancing) {
+      this.dancing = isDancing;
+    },
+    dance: function() {
+      return this.dancing;
+    }
+  });
+
+  var Ninja = Person.subClass({                            //#2
+    init: function() {
+      this._super(false);                                  //#3
+    },
+    dance: function() {
+      // Ninja-specific stuff here
+      return this._super();
+    },
+    swingSword: function() {
+      return true;
+    }
+  });
+
+  var person = new Person(true);                            //#4
+  assert(person.dance(),                                    //#4
+         "The person is dancing.");                         //#4
+
+  var ninja = new Ninja();                                  //#5
+  assert(ninja.swingSword(),                                //#5
+         "The sword is swinging.");                         //#5
+  assert(!ninja.dance(),                                    //#5
+         "The ninja is not dancing.");                      //#5
+
+  assert(person instanceof Person,                          //#6
+         "Person is a Person.");                            //#6
+  assert(ninja instanceof Ninja &&                          //#6
+         ninja instanceof Person,                           //#6
+         "Ninja is a Ninja and a Person.");                 //#6
+(function(){
+	var initializing = false;
+	Object.subClass = function(properties){
+		var _super = this.prototype;
+		initializing = true;
+		var proto = new this();
+		initializing = false;
+
+	}
+})()
+*/
+
+//正则表达式
+//7.2
+/*
+var re1 = /test/i;                           //#1
+
+var re2 = new RegExp("test", "i");           //#2
+
+assert(re2.toString() == "/test/i",
+     "Verify the contents of the expression.");
+assert(re1.test("TesT"), "Yes, it's case-insensitive.");
+assert(re2.test("TesT"), "This one is too.");
+assert(re1.toString() == re2.toString(),
+    "The regular expressions expressions are equal.");
+assert( re1 != re2, "But they are different objects.");
+*/
+//7.5
+/*
+var html = "<div class='test'><b>Hello</b> <i>world!</i></div>";
+
+var results = html.match(/<(\/?)(\w+)([^>]*?)>/);          //#1
+
+assert(results[0] == "<div class='test'>", "The entire match.");
+assert(results[1] == "", "The (missing) slash.");
+assert(results[2] == "div", "The tag name.");
+assert(results[3] == " class='test'", "The attributes.");
+
+var all = html.match(/<(\/?)(\w+)([^>]*?)>/g);              //#2
+
+assert(all[0] == "<div class='test'>", "Opening div tag.");
+assert(all[1] == "<b>", "Opening b tag.");
+assert(all[2] == "</b>", "Closing b tag.");
+assert(all[3] == "<i>", "Opening i tag.");
+assert(all[4] == "</i>", "Closing i tag.");
+assert(all[5] == "</div>", "Closing div tag.");
+*/
+//7.6
+/*
+var html = "<div class='test'><b>Hello</b> <i>world!</i></div>";
+var pattern = /<(\/?)(\w+)([^>]*?)>/g, match;
+var num = 0;
+
+while ((match = pattern.exec(html)) !== null) {                  //#1
+assert(match.length == 4,
+      "Every match finds each tag and 3 captures.");
+num++;
+}
+
+assert(num == 6, "3 opening and 3 closing tags found.");
+*/
+//7.8
+var pattern = /((?:ninja-)+)sword/;                     //1
+
+var ninjas = "ninja-ninja-sword".match(pattern);
+
+assert(ninjas.length == 2,"Only one capture was returned.");
+assert(ninjas[1] == "ninja-ninja-",
+     "Matched both words, without any extra capture.");

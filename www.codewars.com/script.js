@@ -124,3 +124,73 @@ function sumLength (arr){
   return ''+z+' '+f;
 }
 */
+
+/*
+2016-09-13
+description:
+数独游戏
+https://www.codewars.com/kata/53db96041f1a7d32dc0004d2/train/javascript
+*/
+function doneOrNot(board){
+  //your code here
+  function render(arr){
+    arr.forEach(function(each,index){
+      arr[index] = false;
+    });
+  }
+  var arr = new Array(10);
+  for(var i = 0;i < 10; i++)
+    arr[i] = false;
+  //try 1
+  for(var i = 0; i < 9; i++){
+    for(var j = 0; j < 9; j++){
+      if(arr[board[i][j]]){
+        return "Try again!";
+      }
+      arr[board[i][j]] = true;
+    }
+    render(arr);
+  }
+  //try 2
+  for(var i = 0; i < 9; i++){
+    for(var j = 0; j < 9; j++){
+      if(arr[board[j][i]]){
+        return "Try again!";
+      }
+      arr[board[j][i]] = true;
+    }
+    render(arr);
+  }
+  //try 3
+  for(var i = 0; i < 9; i +=3){
+    for(var j = 0; j < 9; j +=3){
+      for(var k = 0; i < 3; i++){
+        for(var m = 0; m < 3; m++){
+          if(arr[board[i+k][j+m]])
+            return "Try again!";
+          arr[board[i+k][j+m]] = true;
+        }
+      }
+      render(arr);
+    }
+  }
+  return 'Finished!';
+}
+log(doneOrNot([[5, 3, 4, 6, 7, 8, 9, 1, 2], 
+                         [6, 7, 2, 1, 9, 5, 3, 4, 8],
+                         [1, 9, 8, 3, 4, 2, 5, 6, 7],
+                         [8, 5, 9, 7, 6, 1, 4, 2, 3],
+                         [4, 2, 6, 8, 5, 3, 7, 9, 1],
+                         [7, 1, 3, 9, 2, 4, 8, 5, 6],
+                         [9, 6, 1, 5, 3, 7, 2, 8, 4],
+                         [2, 8, 7, 4, 1, 9, 6, 3, 5],
+                         [3, 4, 5, 2, 8, 6, 1, 7, 9]]));
+log(doneOrNot([[5, 3, 4, 6, 7, 8, 9, 1, 2], 
+                         [6, 7, 2, 1, 9, 0, 3, 4, 9],
+                         [1, 0, 0, 3, 4, 2, 5, 6, 0],
+                         [8, 5, 9, 7, 6, 1, 0, 2, 0],
+                         [4, 2, 6, 8, 5, 3, 7, 9, 1],
+                         [7, 1, 3, 9, 2, 4, 8, 5, 6],
+                         [9, 0, 1, 5, 3, 7, 2, 1, 4],
+                         [2, 8, 7, 4, 1, 9, 6, 3, 5],
+                         [3, 0, 0, 4, 8, 1, 1, 7, 9]]));
