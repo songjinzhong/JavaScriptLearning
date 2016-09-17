@@ -131,6 +131,7 @@ description:
 数独游戏
 https://www.codewars.com/kata/53db96041f1a7d32dc0004d2/train/javascript
 */
+/*
 function doneOrNot(board){
   //your code here
   function render(arr){
@@ -194,3 +195,19 @@ log(doneOrNot([[5, 3, 4, 6, 7, 8, 9, 1, 2],
                          [9, 0, 1, 5, 3, 7, 2, 1, 4],
                          [2, 8, 7, 4, 1, 9, 6, 3, 5],
                          [3, 0, 0, 4, 8, 1, 1, 7, 9]]));
+*/
+
+function removeNb (n) {
+  var sum = (1+n)*n/2+1;
+  var b;
+  var back = [];
+  for(var i = 2; i <= n+1; i++){
+    b = sum / i;
+    if(b%1 == 0 && b>=2 &&b<=n+1){
+      back.push([i-1,b-1]);
+    }
+  }
+  return back;
+}
+log(removeNb(26))
+log(removeNb(100))

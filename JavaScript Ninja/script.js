@@ -1047,6 +1047,7 @@ num++;
 assert(num == 6, "3 opening and 3 closing tags found.");
 */
 //7.8
+/*
 var pattern = /((?:ninja-)+)sword/;                     //1
 
 var ninjas = "ninja-ninja-sword".match(pattern);
@@ -1054,3 +1055,184 @@ var ninjas = "ninja-ninja-sword".match(pattern);
 assert(ninjas.length == 2,"Only one capture was returned.");
 assert(ninjas[1] == "ninja-ninja-",
      "Matched both words, without any extra capture.");
+*/
+//7.10
+/*
+  function compress(source) {
+    var keys = {};                                     //#1
+
+    source.replace(
+      /([^=&]+)=([^&]*)/g,
+      function(full, key, value) {                     //#2
+        keys[key] =
+          (keys[key] ? keys[key] + "," : "") + value;
+        return "";
+      }
+    );
+
+    var result = [];                                   //#3
+    for (var key in keys) {                            //#3
+      result.push(key + "=" + keys[key]);              //#3
+    }                                                  //#3
+
+    return result.join("&");                           //#4
+  }
+
+  assert(compress("foo=1&foo=2&blah=a&blah=b&foo=3") ==
+         "foo=1,2,3&blah=a,b",
+         "Compression is OK!");
+*/
+//9.1
+/*
+assert(eval("5 + 5") === 10,                               //#1
+             "5 and 5 is 10");
+
+assert(eval("var ninja = 5;") === undefined,               //#2
+       "no value was returned" );
+assert(ninja === 5, "The variable ninja was created");     //#3
+
+(function(){
+  eval("var ninja = 6;");                                  //#4
+  assert(ninja === 6,                                      //#4
+        "evaluated within the current scope.");            //#4
+})();
+
+assert(window.ninja === 5,                                 //#5
+      "the global scope was unaffected");                  //#5
+assert(ninja === 5,                                        //#5
+      "the global scope was unaffected");                  //#5
+*/
+//9.2
+/*
+var ninja = eval("({name:'Ninja'})");             //#1
+assert(ninja != undefined,"the ninja was created");
+assert(ninja.name === "Ninja",
+       "and with the expected property");
+
+var fn = eval("false||function(){return 'Ninja';}");   //#2
+assert(typeof fn === 'function',
+       "the function was created");
+assert(fn() === "Ninja",
+       "and returns expected value" );
+
+var ninja2 = eval("{name:'Ninja'}");               //#3
+assert(ninja2 != undefined,"ninja2 was created");
+assert(ninja2.name === "Ninja",
+    "and with the expected property");
+*/
+//9.4
+/*
+function test(a){ return a + a; }                    //#1
+
+assert(test.toString() ===                           //#2
+       "function test(a){ return a + a; }",          //#2
+       "Function decompiled");                       //#2
+*/
+//9.5
+
+//function argumentNames(fn) {
+//  var found = /^[\s\(]*function[^(]*\(\s*([^)]*?)\s*\)/   //#1
+//              .exec(fn.toString());                       //#1
+//  return found && found[1] ?                              //#2
+//           found[1].split(/,\s*/) :                       //#2
+//           [];                                            //#2
+//}
+/*
+assert(argumentNames(function(){}).length === 0,          //#3
+       "Works on zero-arg functions.");
+
+assert(argumentNames(function(x){})[0] === "x",           //#4
+       "Single argument working.");
+
+var results = argumentNames(function(a,b,c,d,e){});       //#5
+assert(results[0] == 'a' &&
+       results[1] == 'b' &&
+       results[2] == 'c' &&
+       results[3] == 'd' &&
+       results[4] == 'e',
+       "Multiple arguments working!");
+*/
+//9.6
+/*
+ var json = '{"name":"Ninja"}';               //#1
+
+var object = eval("(" + json + ")");         //#2
+
+assert(object.name === "Ninja",              //#3
+       "My name is Ninja!");                 //#3
+*/
+//9.7
+/*
+var base2 = {};
+base2.namespace =                                          //#1
+  "var Base=base2.Base;var Package=base2.Package;" +
+  "var Abstract=base2.Abstract;var Module=base2.Module;" +
+  "var Enumerable=base2.Enumerable;var Map=base2.Map;" +
+  "var Collection=base2.Collection;var RegGrp=base2.RegGrp;" +
+  "var Undefined=base2.Undefined;var Null=base2.Null;" +
+  "var This=base2.This;var True=base2.True;var False=base2.False;" +
+  "var assignID=base2.assignID;var detect=base2.detect;" +
+  "var global=base2.global;var lang=base2.lang;" +
+  "var JavaScript=base2.JavaScript;var JST=base2.JST;" +
+  "var JSON=base2.JSON;var IO=base2.IO;var MiniWeb=base2.MiniWeb;" +
+  "var DOM=base2.DOM;var JSB=base2.JSB;var code=base2.code;" +
+  "var doc=base2.doc;";
+
+assert(typeof This === "undefined",                          //#2
+       "The This object doesn't exist." );
+
+eval(base2.namespace);                                       //#3
+
+assert(typeof This === "function",                           //#4
+       "And now the namespace is imported." );
+assert(typeof Collection === "function",
+       "Verifying the namespace import." );
+*/
+//10.1
+/*
+var use = "other";                                               //#1
+
+var katana = {                                                   //#2
+  isSharp: true,
+  use: function(){
+    this.isSharp = !this.isSharp;
+  }
+};
+
+with (katana) {                                                  //#3
+
+  assert(use !== "other" && typeof use == "function",            //#4
+        "use is a function from the katana object.");
+  assert(this !== katana,
+        "context isn't changed; keeps its original value");
+
+}
+
+assert(use  === "other",                                         //#5
+       "outside the with use is unaffected.");
+assert(typeof isSharp === "undefined",
+       "outside the with the properties don't exist.");
+*/
+//10.2
+var katana = {                                            //#1
+  isSharp: true,
+  use: function(){
+    this.isSharp = !this.isSharp;
+  }
+};
+
+with (katana) {
+  isSharp = false;                                        //#2
+
+  assert(katana.isSharp === false,                        //#3
+      "properties can be assigned");
+
+  cut = function(){                                       //#4
+    isSharp = false;
+  };
+
+  assert(typeof katana.cut == "function",                 //#5
+      "new properties can be created on the scoped object");
+  assert(typeof window.cut == "function",
+      "new properties are created in the global scope");
+}

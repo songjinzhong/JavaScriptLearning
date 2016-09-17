@@ -45,6 +45,7 @@ foo.call({id : 1})()
 写一个函数，实现的效果是，传2个参数进去，
 第一个参数是一个需要被执行的函数，第二个参数是允许执行的次数
 */
+/*
 function once(fn,num){
   var f = fn;
   return (function(){
@@ -63,3 +64,25 @@ var obj = {
 }
 obj.foo();
 var newFunc = once(obj.foo ,3);
+*/
+/*
+2016-9-15 
+关于 prototype 和 __proto__ 区别
+https://segmentfault.com/a/1190000006711220
+*/
+var Person = function () { };
+Person.prototype.Say = function () {
+    alert("Person say");
+}
+Person.prototype.Salary = 50000;
+var Programmer = function () { };
+Programmer.prototype = new Person();
+Programmer.prototype.WriteCode = function () {
+    alert("programmer writes code");
+};
+Programmer.prototype.Salary = 500;
+var p = new Programmer();
+p.Salary = 300;
+p.Say();
+p.WriteCode();
+alert(p.Salary);
