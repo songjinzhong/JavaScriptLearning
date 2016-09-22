@@ -70,6 +70,7 @@ var newFunc = once(obj.foo ,3);
 关于 prototype 和 __proto__ 区别
 https://segmentfault.com/a/1190000006711220
 */
+/*
 var Person = function () { };
 Person.prototype.Say = function () {
     alert("Person say");
@@ -86,3 +87,4 @@ p.Salary = 300;
 p.Say();
 p.WriteCode();
 alert(p.Salary);
+*/

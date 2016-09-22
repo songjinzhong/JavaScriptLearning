@@ -1214,6 +1214,7 @@ assert(typeof isSharp === "undefined",
        "outside the with the properties don't exist.");
 */
 //10.2
+/*
 var katana = {                                            //#1
   isSharp: true,
   use: function(){
@@ -1236,3 +1237,11 @@ with (katana) {
   assert(typeof window.cut == "function",
       "new properties are created in the global scope");
 }
+*/
+/*
+var image = document.getElementsByTagName('img')[0];
+var newSrc = '../i/n-png';
+image.src = newSrc;
+assert(true,image.src)
+assert(image.getAttribute('src') != '../i/n-png',image.getAttribute('src'))
+*/

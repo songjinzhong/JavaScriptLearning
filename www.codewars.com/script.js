@@ -196,7 +196,7 @@ log(doneOrNot([[5, 3, 4, 6, 7, 8, 9, 1, 2],
                          [2, 8, 7, 4, 1, 9, 6, 3, 5],
                          [3, 0, 0, 4, 8, 1, 1, 7, 9]]));
 */
-
+/*
 function removeNb (n) {
   var sum = (1+n)*n/2+1;
   var b;
@@ -211,3 +211,209 @@ function removeNb (n) {
 }
 log(removeNb(26))
 log(removeNb(100))
+*/
+
+/*
+Weight for weight
+https://www.codewars.com/kata/weight-for-weight/train/javascript
+*/
+/*
+function orderWeight(strng) {
+    // your code
+    if(!strng)
+      return ""
+    return strng.split(" ")
+           .map((item)=>{return [item.split("").reduce((p,n)=>{return parseInt(p) + parseInt(n)}),item,item.length]})
+           .sort((a,b)=>{
+             if(a[0]==b[0]){
+               var aa = a[1].split("");
+               var bb = b[1].split("");
+               var length = aa.length-bb.length?bb.length:aa.length;
+               var i = 0;
+               while(i<length){
+                 if(aa[i] != bb[i])
+                   return aa[i]-bb[i];
+                 i++;
+               }
+               return aa[length]?1:-1;
+             }
+             return a[0]-b[0]
+           })
+           .map((item)=>{return item[1]})
+           .join(" ")
+}
+log(orderWeight(""))
+log(orderWeight("103 123 4444 99 2000"))
+log(orderWeight("2000 10003 1234000 44444444 9999 11 11 22 123"))
+log(orderWeight("80544 70 237271 120 157406 103 91957 195 343509 50 349976 88 493574 100 257088 56 484113 174 205183 192 54"))
+log(orderWeight("462623 20 470670 114 327537 136 368135 200 28811 24 17708 138 156955 63 424042 82 145165 127 458231 47 15"))
+*/
+/*
+Convert string to camel case
+https://www.codewars.com/kata/convert-string-to-camel-case/train/javascript
+*/
+/*
+function toCamelCase(str){
+  var regex = /[^a-zA-Z](\w)/g;
+  var match;
+  var list=[];
+  while((match=regex.exec(str))!==null){
+    list.push(match[1]);
+  }
+  list = list.map(function(item){
+    return item.toUpperCase();
+  });
+  list.forEach((item)=>{str = str.replace(/[^a-zA-Z](\w)/,item)});
+  return str;
+}
+
+*/
+//good ways
+/*
+function toCamelCase(str){
+      var regExp=/[-_]\w/ig;
+      return str.replace(regExp,function(match){
+            return match.charAt(1).toUpperCase();
+       });
+}
+log(toCamelCase('a_bb-cc-dd'))
+log(toCamelCase('the_stealth_warrior'))
+*/
+/*
+2016-09-19
+Palindrome chain length
+http://www.codewars.com/kata/palindrome-chain-length/train/javascript
+*/
+/*
+var palindromeChainLength = function(n) {
+  var m = parseInt((""+n).split("").reverse().join(""));
+  return m == n ? 0 : 1 + palindromeChainLength(m + n)
+};
+log(palindromeChainLength(87))
+*/
+/*
+2016-09-20
+Adding Big Numbers
+https://www.codewars.com/kata/adding-big-numbers/train/javascript
+*/
+/*
+function add(a, b) {
+  var list_a = a.split("").reverse().join("").split("")
+  var list_b = b.split("").reverse().join("").split("")
+  var list = list_a.length > list_b.length ? list_a : list_b;
+  var length = list_a.length > list_b.length ? list_b.length : list_a.length;
+  var i = 0;
+  for(; i < length; i++){
+    list[i] = Number(list_a[i]) + Number(list_b[i]);
+  }
+  for(let j = i; j < list.length; j++){
+    list[j] = Number(list[j]);
+  }
+  for(let i = 0; i < list.length; i++){
+    if(list[i] >=10){
+      if(i == list.length-1){
+        list.push(1)
+        list[i] -= 10;
+      }else{
+        list[i+1]++;
+        list[i] -= 10;
+      }
+    }
+  }
+  return list.reverse().join("");
+}
+log(add("99","9"))
+*/
+/*
+best answer
+the the the
+*/
+/*
+function add (a, b) {
+  var res = '', c = 0
+  a = a.split('')
+  b = b.split('')
+  while (a.length || b.length || c) {
+    c += ~~a.pop() + ~~b.pop()
+    res = c % 10 + res
+    c = c > 9
+  }
+  return res
+}
+log(add("4","777"))
+*/
+/*
+https://www.codewars.com/kata/sum-the-array/javascript
+*/
+//Your code goes here
+/*
+Array.prototype.sum = function(){
+  return this.reduce((p,n)=>{
+    return p+n;
+  });
+}
+log([1,2,3].sum())
+*/
+/*
+Strings Mix
+https://www.codewars.com/kata/strings-mix/train/javascript
+*/
+function mix(s1, s2) {
+    var dict = {},
+        dict2 = {};
+    var l1 = s1.toLowerCase().replace(/[^a-zA-Z]+/g, "").split("").filter((value)=>{
+        dict[value]=~~dict[value]+1;
+        return dict[value] - 1 <= 0;
+    }).filter((value)=>{
+        return dict[value]>1
+    });
+    l1.sort((a,b)=>{return dict[b] - dict[a]});
+    l1.sort((a,b)=>{
+        if(dict[a]==dict[b])
+            return a-b;
+    })
+    var l2 = s2.toLowerCase().replace(/[^a-zA-Z]+/g, "").split("").filter((value)=>{
+        dict2[value]=~~dict2[value]+1;
+        return dict2[value] - 1 <= 0;
+    }).filter((value)=>{
+        return dict2[value]>1
+    });
+    l2.sort((a,b)=>{return dict2[b] - dict2[a]});
+    l2.sort((a,b)=>{
+        if(dict2[a]==dict2[b]){
+            return a-b;
+        }
+    })
+    var str = ""
+    while(l1.length||l2.length){
+        if(~~dict[l1[0]]>=~~dict2[l2[0]]){
+            var dele = l1.shift()
+            if(dict2[dele] == dict[dele])
+                str+="/=:"
+            else
+                str+="/1:";
+            for(let i = 0; i < dict[dele];i++){
+                str+=dele;
+            }
+            for(let i = 0;i<l2.length;i++)
+                if(l2[i] == dele){
+                    l2.splice(i,1)
+                    break;
+                }
+        }
+        else if(~~dict[l1[0]] < ~~dict2[l2[0]]){
+            var dele = l2.shift();
+            str+="/2:";
+            for(let i = 0;i<l1.length;i++){
+                if(l1[i] == dele){
+                    l1.splice(i,1)
+                    break;
+                }
+            }
+            for(let i = 0;i<dict2[dele];i++)
+                str+=dele;
+        }
+    }
+    return str.replace(/^\//,"")
+}
+log(mix("Are they here", "yes, they are here"))
