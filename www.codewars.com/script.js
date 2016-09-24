@@ -358,6 +358,7 @@ log([1,2,3].sum())
 Strings Mix
 https://www.codewars.com/kata/strings-mix/train/javascript
 */
+/*
 function mix(s1, s2) {
     var dict = {},
         dict2 = {};
@@ -417,3 +418,90 @@ function mix(s1, s2) {
     return str.replace(/^\//,"")
 }
 log(mix("Are they here", "yes, they are here"))
+*/
+/*
+2016-09-24
+Roman Numerals Decoder
+https://www.codewars.com/kata/roman-numerals-decoder/train/javascript
+*/
+/*
+function solution(roman){
+  // complete the solution by transforming the 
+  // string roman numeral into an integer  
+  var list = "MDCLXVI".split("");
+  var numlist = "1000.500.100.50.10.5.1".split(".");
+  var dict = {};
+  list.forEach((value,index)=>{
+  	dict[value] = numlist[index];
+  });
+  var sum = 0;
+  var roman_list = roman.split("");
+  for(var i = 0; i < roman_list.length; i++){
+  	sum += ~~dict[roman_list[i]];
+  	if(i != 0 && ~~dict[roman_list[i]] > ~~dict[roman_list[i-1]]){
+  		sum -= 2*(~~dict[roman_list[i-1]]);
+  	}
+  }
+  return sum;
+}
+log(solution("VII"))
+*/
+/*
+Undo/Redo
+https://www.codewars.com/kata/undo-slash-redo/train/javascript
+*/
+
+function undoRedo(object) {
+	return {
+		dolist : [],
+		undolist : [],
+		set: function(key, value) {
+			this.dolist.push([key,object[key]]);
+			this.undolist = [];
+			object[key] = value;
+		},
+		get: function(key) {
+			return object[key];
+		},
+		del: function(key) {
+			this.dolist.push([key,object[key]]);
+			this.undolist = [];
+			delete object[key];
+		},
+		undo: function() {
+			if(!this.dolist.length)
+				throw new Error("can't")
+			else{
+				var dodo = this.dolist.pop();
+				this.undolist.push([dodo[0],object[dodo[0]]]);
+				if(dodo[1] != undefined)
+					object[dodo[0]] = dodo[1];
+				else{
+					delete object[dodo[0]]
+				}
+			}
+		},
+		redo: function() {
+			if(!this.undolist.length)
+				throw new Error("can't")
+			else{
+				var redo = this.undolist.pop();
+				this.dolist.push([redo[0],object[redo[0]]]);
+				if(redo[1] != undefined)
+					object[redo[0]] = redo[1];
+				else{
+					delete object[redo[0]]
+				}
+			}
+		}
+	};
+}
+
+var obj = {
+	x : 1,
+	y : 2
+}
+var test = undoRedo(obj);
+test.get("x")
+test.del("x")
+test.undo();
