@@ -88,3 +88,17 @@ p.Say();
 p.WriteCode();
 alert(p.Salary);
 */
+
+/*
+ * 关于动态函数中的 && 深入理解
+ * 2016-09-29
+ *
+ */
+var x = 5;
+console.log(x>1 && x<10)
+console.log(x>6 && x<10)
+console.log(false && true)
+console.log(false && 2)
+console.log(true && 2)
+console.log(true && '@')
+console.log(true && x<10)
