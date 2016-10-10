@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>01</title>
+</head>
+<body>
+	<div class="hello">
+		<p>Hello1</p>
+	</div>	
+	<div id="2" class="hello">
+		<p id='son'>Hello2</p>
+	</div>	
+	<div class="hello">
+		<p>Hello3</p>
+	</div>
+	<div id="one" class="test1 test2 test3" style="color:blue">
+		<p>id-one</p>
+	</div>
+	<script type="text/javascript">
+		(function(window,document){
+			var jquery = function(selector){
+				return new jquery.prototype.init(selector);
+			}
+			jquery.prototype = {
+				constructor : jquery,
+				selector : '',
+				length : 0,
+				init : function(selector){
+					if(!selector) return this;
+					var selector = selector.trim();
+					if(selector.charAt(0) == '#'){
+						this.selector = selector.substring(1);
+						this[0] = document.getElementById(this.selector);
+						this.length = 1;
+						return this;
+					}else{
+						var elm = document.querySelectorAll(selector);
+						for (var i = 0; i < elm.length; i++) {
+							this[i] = elm[i];
+						}
+						this.selector = selector;
+						this.length = elm.length;
+						return this;
+					}
+
+				},
+				hasClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(this[i].className.match(regex))
+							return true;
+					}
+					return false;
+				},
+				addClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(!this[i].className.match(regex)){
+							this[i].className += ' ' + cn;
+						}
+					}
+					return this;
+				},
+				removeClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(this[i].className.match(regex)){
+							this[i].className = this[i].className.replace(regex," ").trim();
+						}
+					}
+					return this;
+				},
+				css : function(attr,val){
+					for(var i = 0; i < this.length; i++){
+						if(val == undefined){
+							if(typeof attr === 'object'){
+								for(var key in attr){
+									this.css(key, attr[key]);
+								}
+							}else if(typeof attr === 'string'){
+								return getComputedStyle(this[i])[attr];
+							}
+						}else{
+							this[i].style[attr] = val;
+						}
+					}
+				},
+				next : function(){
+					return sibling(this[0], 'nextSibling');
+				},
+				prev : function(){
+					return sibling(this[0], 'previousSibling');
+				},
+				parent : function(){
+					var parent = this[0].parentNode;
+					parent = parent && parent.nodeType !== 11 ? parent : null;
+					var jq = jquery();
+					jq[0] = parent;
+					jq.selector = parent.tagName.toLocaleLowerCase();
+					jq.length = 1;
+					return jq;
+				}
+			}
+			jquery.prototype.init.prototype = jquery.prototype;
+			jquery.ajax = function(){
+				console.log('ajax function');
+			}
+
+			/*
+	     * 函数
+			 */
+			function sibling(cur, dir){
+				while ( ( cur = cur[ dir ] ) && cur.nodeType !== 1 ) {}
+				return cur;
+			}
+			window.$ = jquery;
+		})(window,document)
+	</script>
+	<script type="text/javascript">
+		// for test easily
+		var log = function(str){
+			console.log(str);
+		}
+	</script>
+	<script type="text/javascript">
+		/*
+		 * test 02
+		 */
+		/*
+		console.log($('#one').hasClass('test'));
+		console.log($('#one').hasClass('test1'));
+		$('#one').addClass("testAdd").removeClass("testAdd");
+		$('#one').addClass("testAdd");
+		console.log($('#one')[0].className);
+		$('#one').removeClass('testAdd');
+		console.log($('#one')[0].className);
+		$('#one').removeClass('test2');
+		console.log($('#one')[0].className);
+		*/
+		$('#one').css('color','red');
+		log($('#one').css('color'));
+		$('.hello').css({'color':'red','font-size':'30px'})
+
+		log($('.hello').next().innerHTML.trim());
+		log($('#2').prev().innerHTML.trim());
+		log($('#son').parent()[0].innerHTML.trim());
+	</script>
+</body>
+</html>
