@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>01</title>
+</head>
+<body>
+	<div class="hello">
+		<p>Hello</p>
+	</div>	
+	<div class="hello">
+		<p>Hello</p>
+	</div>	
+	<div class="hello">
+		<p>Hello</p>
+	</div>
+	<div id="one" class="test1 test2 test3">
+		<p>one</p>
+	</div>
+	<script type="text/javascript">
+		(function(window,document){
+			var jquery = function(selector){
+				return new jquery.prototype.init(selector);
+			}
+			jquery.prototype = {
+				constructor : jquery,
+				selector : '',
+				length : 0,
+				init : function(selector){
+					if(!selector) return this;
+					var selector = selector.trim();
+					if(selector.charAt(0) == '#'){
+						this.selector = selector.substring(1);
+						this[0] = document.getElementById(this.selector);
+						this.length = 1;
+						return this;
+					}else{
+						var elm = document.querySelectorAll(selector);
+						for (var i = 0; i < elm.length; i++) {
+							this[i] = elm[i];
+						}
+						this.selector = selector;
+						this.length = elm.length;
+						return this;
+					}
+
+				},
+				hasClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(this[i].className.match(regex))
+							return true;
+					}
+					return false;
+				},
+				addClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(!this[i].className.match(regex)){
+							this[i].className += ' ' + cn;
+						}
+					}
+					return this;
+				},
+				removeClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(this[i].className.match(regex)){
+							this[i].className = this[i].className.replace(regex," ").trim();
+						}
+					}
+					return this;
+				}
+			}
+			jquery.prototype.init.prototype = jquery.prototype;
+			jquery.ajax = function(){
+				console.log('ajax function');
+			}
+			window.$ = jquery;
+		})(window,document)
+		/*
+		 * test 02
+		 */
+		console.log($('#one').hasClass('test'));
+		console.log($('#one').hasClass('test1'));
+		$('#one').addClass("testAdd").removeClass("testAdd");
+		$('#one').addClass("testAdd");
+		console.log($('#one')[0].className);
+		$('#one').removeClass('testAdd');
+		console.log($('#one')[0].className);
+		$('#one').removeClass('test2');
+		console.log($('#one')[0].className);
+	</script>
+</body>
+</html>
