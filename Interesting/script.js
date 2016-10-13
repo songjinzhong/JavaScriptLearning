@@ -94,6 +94,7 @@ alert(p.Salary);
  * 2016-09-29
  *
  */
+/*
 var x = 5;
 console.log(x>1 && x<10)
 console.log(x>6 && x<10)
@@ -102,3 +103,53 @@ console.log(false && 2)
 console.log(true && 2)
 console.log(true && '@')
 console.log(true && x<10)
+*/
+
+/*
+ *  箭头函数
+ *  什么时候不该使用es6箭头函数
+ */
+var obj = {  
+    array: [1, 2, 3],
+    sum: () => {
+        console.log(this === window); // => true
+        return this.array.reduce((result, item) => result + item);
+    }
+};
+obj.sum();
+//同理，在原型的方法上（本质是一样的）
+function Person (pName) {
+    this.pName = pName;
+}
+
+Person.prototype.sayName = () => {
+    console.log(this === window); // => true
+    return this.pName;
+}
+
+var person = new Person('wdg');
+
+person.sayName(); // => undefined
+// 这个函数的作用就是当只有一个参数a时，返回接受一个参数b返回a*b的函数，接收两个参数时直接返回乘积，这个函数可以很好的工作并且看起很简洁，但是从第一眼看去并不是很好理解。
+let multiply = (a, b) => b === undefined ? b => a * b : a * b;
+
+let double = multiply(2);
+
+double(3); // => 6
+
+multiply(2, 3); // =>6
+
+//动态上下文
+var button = document.getElementById('myButton');  
+button.addEventListener('click', () => {  
+    console.log(this === window); // => true
+    this.innerHTML = 'Clicked button';
+});
+
+//构造函数
+var Person = (name) => {
+    this.name = name;
+}
+
+// Uncaught TypeError: Person is not a constructor
+var person = new Person('wdg');
