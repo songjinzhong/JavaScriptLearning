@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>09</title>
+</head>
+<body>
+	<div class="hello">
+		<p>Hello1</p>
+	</div>	
+	<div id="2" class="hello">
+		<p id='son'>Hello2</p>
+	</div>	
+	<div class="hello">
+		<p>Hello3</p>
+	</div>
+	<div id="one" class="test1 test2 test3" style="color:blue">
+		<p>id-one</p>
+	</div>
+	<script type="text/javascript">
+		(function(window,document){
+			var jquery = function(selector){
+				return new jquery.prototype.init(selector);
+			}
+			jquery.guid = 0,
+			jquery.events = [],
+			jquery.prototype = {
+				constructor : jquery,
+				selector : '',
+				length : 0,
+				init : function(selector){
+					if(!selector) return this;
+					if(typeof selector === 'object' && selector instanceof Element){
+						this[0] = selector;
+						this.length = 1;
+						return this;
+					}else if(typeof selector === 'function'){
+						jquery.ready(selector);
+						return;
+					}
+					var selector = selector.trim();
+					if(selector.charAt(0) == '#' && !selector.match(/\s/)){
+						this.selector = selector;
+						selector = selector.substring(1);
+						this[0] = document.getElementById(selector);
+						this.length = 1;
+						return this;
+
+					}else{
+						var elm = document.querySelectorAll(selector);
+						for (var i = 0; i < elm.length; i++) {
+							this[i] = elm[i];
+						}
+						this.selector = selector;
+						this.length = elm.length;
+						return this;
+					}
+
+				},
+				hasClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(this[i].className.match(regex))
+							return true;
+					}
+					return false;
+				},
+				addClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(!this[i].className.match(regex)){
+							this[i].className += ' ' + cn;
+						}
+					}
+					return this;
+				},
+				removeClass : function(cn){
+					var regex = new RegExp('(\\s|^)' + cn + '(\\s|$)');
+					for(var i = 0; i < this.length; i++){
+						if(this[i].className.match(regex)){
+							this[i].className = this[i].className.replace(regex," ").trim();
+						}
+					}
+					return this;
+				},
+				css : function(attr,val){
+					for(var i = 0; i < this.length; i++){
+						if(val == undefined){
+							if(typeof attr === 'object'){
+								for(var key in attr){
+									this.css(key, attr[key]);
+								}
+							}else if(typeof attr === 'string'){
+								return getComputedStyle(this[i])[attr];
+							}
+						}else{
+							this[i].style[attr] = val;
+						}
+					}
+				},
+				next : function(){
+					return sibling(this[0], 'nextSibling');
+				},
+				prev : function(){
+					return sibling(this[0], 'previousSibling');
+				},
+				parent : function(){
+					var parent = this[0].parentNode;
+					parent = parent && parent.nodeType !== 11 ? parent : null;
+					var jq = jquery();
+					jq[0] = parent;
+					jq.selector = parent.tagName.toLocaleLowerCase();
+					jq.length = 1;
+					return jq;
+				},
+				// test 5
+				find : function(selector){
+					if(!selector) return ;
+					if(selector.charAt(0) == '#' && !selector.match(/\s/)){
+						return new jquery(selector);
+					}
+					var context = this.selector;
+					return new jquery(context + ' ' + selector);
+				},
+				first : function(){
+					return new jquery(this[0]);
+				},
+				last : function(){
+					return new jquery(this[this.length - 1]);
+				},
+				eq : function(num){
+					while(num < 0)
+						num += this.length;
+					if(num >= this.length)
+						num = num % this.length;
+					return new jquery(this[num]);
+				},
+				get : function(num){
+					while(num < 0)
+						num += this.length;
+					if(num >= this.length)
+						num = num % this.length;
+					return this[num];
+				},
+				/*
+				 * task 07 attr data
+				 */
+				attr : function(attr, val){
+					for(var i = 0; i < this.length; i++){
+						if(arguments.length == 1){
+							if(typeof attr === 'string'){
+								return this[i].getAttribute(attr);
+							}else if(typeof attr === 'object'){
+								var self = this;
+								jquery.each(attr, function(attr, val){
+									self[i].setAttribute(attr, val);
+								});
+							}
+						}else{
+							this[i].setAttribute(attr, val);
+						}
+					}
+					return this;
+				},
+				data : function(attr, val){
+					for(var i = 0; i < this.length; i++){
+						if(arguments.length == 1){
+							if(typeof attr === 'string'){
+								return this[i].getAttribute('data-' + attr)
+							}else if(typeof attr === 'object'){
+								var self = this;
+								jquery.each(attr, function(attr, val){
+									self[i].setAttribute('data-' + attr, val);
+								});
+							}
+						}else{
+							this[i].setAttribute('data-'+attr, val);
+						}
+					}
+					return this;
+				},
+				/*
+ 				 * task 08 
+ 				 * html, text, append, prepend, after, before, remove
+ 				 * 这里使用了两种方法，一种是 JQuery类似的，一种是 insertAdjacentHTML
+				 */
+				html : function(value){
+					if(value === undefined && this[0].nodeType == 1){
+						return this[0].innerHTML;
+					}else{
+						for(var i = 0; i < this.length; i++){
+							this[i].innerHTML = value;
+						}
+					}
+					return this;
+				},
+				text : function(value){
+					if(value === undefined && this[0].nodeType == 1){
+						return this[0].innerText;
+					}else{
+						for(var i = 0; i < this.length; i++){
+							this[i].innerText = value;
+						}
+					}
+				},
+				append : function(value){
+					for(var i = 0; i < this.length; i++){
+						if(this[i].nodeType === 1 || this[i].nodeType === 11 ||this[i].nodeType === 9){
+							this[i].appendChild(str2html(value));
+						}
+					}
+					return this;
+				},
+				prepend : function(value){
+					for(var i = 0; i < this.length; i++){
+						if(this[i].nodeType === 1 || this[i].nodeType === 11 ||this[i].nodeType === 9){
+							this[i].insertBefore(str2html(value), this[i].firstChild);
+						}
+					}
+					return this;
+				},
+				after : function(value){
+					for(var i = 0; i < this.length; i++){
+						if(this[i].nodeType === 1 || this[i].nodeType === 11 ||this[i].nodeType === 9){
+							this[i].parentNode.insertBefore(str2html(value), this[i].nextSibling);
+						}
+					}
+					return this;
+				},
+				before : function(value){
+					for(var i = 0; i < this.length; i++){
+						if(this[i].nodeType === 1 || this[i].nodeType === 11 ||this[i].nodeType === 9){
+							this[i].parentNode.insertBefore(str2html(value), this[i]);
+						}
+					}
+					return this;
+				},
+				remove : function(){
+					for(var i = 0; i < this.length; i++){
+						if(this[i].nodeType === 1 || this[i].nodeType === 11 ||this[i].nodeType === 9){
+							this[i].parentNode.removeChild(this[i]);
+						}
+					}
+					return this;
+				},
+				/*
+				 * 采用 insertAdjacentHTML 方法
+				 */
+				_append : function(value){
+					for(var i = 0; i < this.length; i++){
+						appendDom(this[i], 'beforeend', value);
+					}
+					return this;
+				},
+				_prepend : function(value){
+					for(var i = 0; i < this.length; i++){
+						appendDom(this[i], 'afterbegin', value);
+					}
+					return this;
+				},
+				_before : function(value){
+					for(var i = 0; i < this.length; i++){
+						appendDom(this[i], 'beforebegin', value);
+					}
+					return this;
+				},
+				_after : function(value){
+					for(var i = 0; i < this.length; i++){
+						appendDom(this[i], 'afterend', value);
+					}
+					return this;
+				},
+				/*
+				 * task 9
+				 */
+				on : function(type, selector, fn){
+					if(typeof selector == 'function'){
+						fn = selector;
+						selector = undefined;
+						for(var i = 0; i < this.length; i++){
+							if(!this[i].guid){
+								var id = jquery.guid++;
+								this[i].guid = id;
+								jquery.events[id] = {};
+								jquery.events[id][type] = [fn]
+								add(this[i], type, id);
+							}else{
+								var id = this[i].guid;
+								if(jquery.events[id][type]){
+									jquery.events[id][type].push(fn);
+								}else{
+									jquery.events[id][type] = [fn];
+									add(this[i], type, id);
+								}
+							}
+						}
+					}
+				},
+				off : function(type, selector){
+					if(arguments.length == 0){
+						for(var i = 0; i < this.length; i++){
+							var id = this[i].guid;
+							jquery.events[id] = [];
+						}
+					}else if(arguments.length == 1){
+						for(var i = 0; i < this.length; i++){
+							var id = this[i].guid
+							delete jquery.events[id][type];
+						}
+					}
+				}
+			}
+			jquery.prototype.init.prototype = jquery.prototype;
+			jquery.ajax = function(){
+				console.log('ajax function');
+			}
+			jquery.each = function(obj, callback){
+				var length = obj.length,
+					con = obj.constructor,
+					i = 0;
+				//用来调用自身
+				if(con == window.$ ){
+					for(; i < length; i++){
+						var val = callback.call(obj[i], i, obj[i]);
+						if(val = false)
+							break;
+					}					
+				}else if(isArray(obj)){
+					for(; i < length; i++){
+						var val = callback.call(obj[i], i, obj[i]);
+						if(val = false)
+							break;
+					}						
+				}else{
+					for(i in obj){
+						var val = callback.call(obj[i], i, obj[i]);
+						if(val = false)
+							break;
+					}	
+				}
+			}
+			jquery.ready = function(fn){
+		    document.addEventListener('DOMContentLoaded',function() {
+		        fn && fn();
+		    },false);
+		    document.removeEventListener('DOMContentLoaded',fn,true);
+			}
+			// task 6
+			jquery.get = function(url, sucBack, complete){
+				var options = {
+					url : url,
+					success : sucBack,
+					complete : complete
+				};
+				ajax(options);
+			}
+			jquery.post = function(url, data, sucBack, complete){
+				var options = {
+					url : url,
+					type : 'POST',
+					data : data,
+					success : sucBack,
+					complete : complete
+				};
+				ajax(options);
+			}
+			jquery.ajax = function(options){
+				ajax(options);
+			}
+			/*
+	     * 函数
+			 */
+			function sibling(cur, dir){
+				while ( ( cur = cur[ dir ] ) && cur.nodeType !== 1 ) {}
+				return cur;
+			}
+			function isArray(obj){
+				return Array.isArray(obj);
+			}
+			//task 6
+			function ajax(options){
+				var defaultOptions = {
+					url: false,
+					type: 'GET',
+					data: false,
+					success: false,
+					complete: false
+				};
+				for(var i in defaultOptions){
+					if(!options[i]){
+						options[i] = defaultOptions[i];
+					}
+				}
+				var xhr = new XMLHttpRequest();
+				var url = options.url;
+				xhr.open(options.type, url);
+				xhr.onreadystatechange = function(){
+					if(xhr.readyState == 4){
+						var result,
+							status = xhr.status;
+						if((status >= 200 && status <= 300) || status == 304){
+							result = xhr.responseText;
+							if(window.JSON){
+								result = JSON.parse(result);
+							}else{
+								result = eval('(' + result + ')');
+							}
+							ajaxSuccess(result, xhr);
+						}
+					}
+				}
+				if(options.type.toLowerCase() === 'post'){
+					xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				}
+				xhr.send(options.data ? options.data : null);
+				function ajaxSuccess(data, xhr){
+					var status = 'success';
+					options.success && options.success(data, options, status, xhr);
+					ajaxComplete(status);
+				}
+				function ajaxComplete(status){
+					options.complete && options.complete(status);
+				}
+			}
+			//task 8 使用 insertAdjacentHTML 方法
+			function appendDom(ele, pos, text){
+				ele.insertAdjacentHTML(pos, text);
+			}
+			// 传统实现 html方法
+			function str2html(text){
+				var div = document.createElement('div');
+				div.innerHTML = text;
+				return div.childNodes[0];
+			}
+			// task 9
+			function add(dom, type, guid){
+				dom.addEventListener(type,function(e){
+					if(jquery.events[guid][type]){
+						for(var i = 0; i < jquery.events[guid][type].length; i++){
+							jquery.events[guid][type][i].call(dom, e);
+						}
+					}
+				}, false);
+			}
+			window.$ = jquery;
+		})(window,document)
+	</script>
+	<script type="text/javascript">
+		// for test easily
+		var log = function(str){
+			console.log(str);
+		}
+	</script>
+	<script type="text/javascript">
+		/*
+     * test 09
+		 */
+		$('#one').on('click',function(e){
+			console.log(this.innerText);
+		});
+		$('.hello').on('click',function(e){
+			console.log(this.innerText);
+		});
+		$('#one').off('click');
+	</script>
+</body>
+</html>

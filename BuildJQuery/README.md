@@ -16,3 +16,4 @@ o'O
 * 06 添加 post get ajax 
 * 07 添加 attr data
 * 08 添加 html text append prepend after before remove
+* 09 on off 简易版本
