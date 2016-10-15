@@ -18,3 +18,4 @@ o'O
 * 08 添加 html text append prepend after before remove
 * 09 on off 简易版本
 * 10 on off 添加事件委托
+* 11 width height extend 的简易版本
