@@ -109,6 +109,7 @@ console.log(true && x<10)
  *  箭头函数
  *  什么时候不该使用es6箭头函数
  */
+ /*
 var obj = {  
     array: [1, 2, 3],
     sum: () => {
@@ -153,3 +154,11 @@ var Person = (name) => {
 
 // Uncaught TypeError: Person is not a constructor
 var person = new Person('wdg');
+*/
+
+/*
+ * || && 的用法和优先级
+*/
+console.log( true || false && false);
+console.log(1 && 3 || 0 && 4);
+console.log(0 && 3 || 1 && 4);
