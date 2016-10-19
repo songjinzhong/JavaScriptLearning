@@ -616,6 +616,7 @@ log("this is a string!!".toBase64());
 log('dGhpcyBpcyBhIHN0cmluZyEh'.fromBase64());
 */
 //base answer
+/*
 String.prototype.toBase64 = function() {
   var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
   var encoded = '';
@@ -651,3 +652,19 @@ String.prototype.fromBase64 = function() {
 };
 log("this is a string!!".toBase64());
 log('dGhpcyBpcyBhIHN0cmluZyEh'.fromBase64());
+*/
+/*
+ * http://www.codewars.com/kata/a-chain-adding-function/train/javascript
+ * add(3)(4)(5) == 12 => true
+*/
+function add(n){
+  var fn = function(x) {
+    return add(n + x);
+  };
+  
+  fn.valueOf = function() {
+    return n;
+  };
+  
+  return fn;
+}
