@@ -101,3 +101,58 @@ flat(data, result);
 
 console.log(result);
 ```
+
+### Event
+
+**问题 3：实现一个简单的 event 事件类，要包括基本的 on、off、trigger**。[参考](https://github.com/qiu-deqing/FE-interview#请实现一个event类继承自此类的对象都会拥有两个方法onoffonce和trigger)。
+
+用函数 + 原型链实现继承。
+
+```javascript
+function event(){
+  this._callbacks = {};
+}
+
+event.prototype.on = function(type, handler){
+  this._callbacks = this._callbacks || {};
+  this._callbacks.type = this._callbacks.type || [];
+  this._callbacks.type.push(handler);
+  return this;
+}
+
+event.prototype.off = function(type, handler){
+  var list = this._callbacks.type;
+  if(list){
+    list = list.filter(function(a){
+      return a !== handler;
+    })
+  }
+  return this;
+}
+
+event.prototype.trigger = function(type, data){
+  var list = this._callbacks.type;
+  if(list){
+    list.forEach(function(a){
+      a.call(this, data);
+    })
+  }
+}
+
+event.prototype.once = function(type, handler){
+  var self = this;
+
+  function deleSelf(){
+    handler.apply(self, arguments);
+    self.off(type, deleSelf);
+  }
+  self.on(type, deleSelf);
+  return this;
+}
+
+//test
+var e = new event();
+e.on('show', showIt);
+e.trigger('show', [1, 2, 3]);
+//这是啥玩意测试。。你们还是自己来吧
+```
