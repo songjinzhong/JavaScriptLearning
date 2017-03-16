@@ -156,3 +156,34 @@ e.on('show', showIt);
 e.trigger('show', [1, 2, 3]);
 //这是啥玩意测试。。你们还是自己来吧
 ```
+
+### unique
+
+数组去重，方法很多。[好文章](https://www.toobug.net/article/array_unique_in_javascript.html)。
+
+```javascript
+// 返回一个新数组
+function unique(arr){
+  var ret = [], obj = {};
+  for(var i = 0; i < arr.length; i ++){
+    if(!obj[arr[i]]){
+      obj[arr[i]] = true;
+      ret.push(arr[i]);
+    }
+  }
+  return ret;
+}
+
+// 在原数组上进行去重
+function unique2(arr){
+  var obj = {};
+  for(var i = arr.length - 1; i >= 0; i--){
+    if(obj[arr[i]]){
+      arr.splice(i, 1);
+    }else{
+      obj[arr[i]] = true;
+    }
+  }
+  return arr;
+}
+```
